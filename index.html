@@ -36,6 +36,14 @@
 				</li>
 			</ul>
 		</div>
+		<div v-if="currentBranch === 'Naissance par Prénom'">
+			<p>Nombre de naissance par prénom :</p>
+			<ul>
+				<li v-for="record in naissances">
+					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
+				</li>
+			</ul>
+		</div>
     </div>
 
 
@@ -46,13 +54,14 @@
 		<script>
 			const apiURL1 = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
 			const apiURL2 = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&sort=prenom&facet=sexe";
+			const apiURL3 = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=prenom";
 			const config = {
 			};
 
 			Vue.createApp({
 				data() {
 					return {
-						branches: ["Naissance par Année", "Total de fille/garçon"],
+						branches: ["Naissance par Année", "Total de fille/garçon", "Naissance par Prénom"],
 						currentBranch: "Naissance par Année",
 						naissances: null,
 					};
@@ -88,6 +97,17 @@
 							   console.log(error);
 							 }
 						}
+						else if(self.currentBranch === 'Naissance par Prénom'){
+							try {
+								const response = await axios.get(apiURL3, config)
+								console.log(response.data)
+								this.naissances = response.data.facet_groups[0].facets
+								  
+							 } catch(error) {
+							   console.log(error);
+							 }
+						}
+						
 					
 				 	
 					 },
