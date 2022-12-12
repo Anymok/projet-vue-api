@@ -10,12 +10,20 @@
     <div id="demo">
         <!-- <pre>{{naissances}}</pre> -->
         <h1>Latest Vue.js Commits</h1>
-        <p>vuejs/vue@{{ currentBranch }}</p>
+        <p>Nombre de naissances à Nantes par année :</p>
         <ul>
-            <li v-for="record in naissances">
-                <p>{{record}}</p>
-            </li>
+			<li v-for="record in naissances">
+				<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
+			</li>
+
+
+		
+			
+            
         </ul>
+		<ul>
+			
+		</ul>
     </div>
 
 
@@ -25,7 +33,7 @@
 		<script src="https://unpkg.com/vue@3"></script>
 		<script>
 			const apiURL =
-				"https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&sort=annee_naissance&facet=prenom&facet=sexe&facet=annee_naissance";
+				"https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
 			const config = {
 			};
 
@@ -50,7 +58,7 @@
 				 	try {
 					  	const response = await axios.get(apiURL, config)
 						  console.log(response.data)
-						  this.naissances = response.data
+						  this.naissances = response.data.facet_groups[0].facets
 					        
 					   } catch(error) {
 					     console.log(error);
