@@ -4,26 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prénom à Nantes</title>
+    <title>Naissance Nantes</title>
 </head>
 <body>
     <div id="demo">
-        <!-- <pre>{{naissances}}</pre> -->
-        <h1>Latest Vue.js Commits</h1>
-        <p>Nombre de naissances à Nantes par année :</p>
-        <ul>
-			<li v-for="record in naissances">
-				<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
-			</li>
-
-
-		
-			
-            
-        </ul>
-		<ul>
-			
-		</ul>
+		<h1>Naissance à Nantes</h1>
+		<template v-for="branch in branches">
+			<input
+				type="radio"
+				:id="branch"
+				:value="branch"
+				name="branch"
+				v-model="currentBranch"
+			/>
+			<label :for="branch">{{ branch }}</label>
+		</template>
+		<div v-if="currentBranch === 'Naissance par Année'">
+			<p>Nombre de naissances à Nantes par année :</p>
+			<ul>
+				<li v-for="record in naissances">
+					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
+				</li>
+			</ul>
+		</div>
     </div>
 
 
@@ -32,16 +35,15 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://unpkg.com/vue@3"></script>
 		<script>
-			const apiURL =
-				"https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
+			const apiURL = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
 			const config = {
 			};
 
 			Vue.createApp({
 				data() {
 					return {
-						branches: ["main"],
-						currentBranch: "main",
+						branches: ["Naissance par Année", "Top prénom"],
+						currentBranch: "Naissance par Année",
 						naissances: null,
 					};
 				},
@@ -64,13 +66,6 @@
 					     console.log(error);
 					   }
 					 },
-					formattedMessage: function (message) {
-						const newline = message.indexOf("\n");
-						return newline > 0 ? message.slice(0, newline) : message;
-					},
-					formattedDate: function (date) {
-						return date.replace(/T|Z/g, " ");
-					},
 				},
 			}).mount("#demo");
 		</script>
