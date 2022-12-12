@@ -20,7 +20,16 @@
 			<label :for="branch">{{ branch }}</label>
 		</template>
 		<div v-if="currentBranch === 'Naissance par Année'">
-			<p>Nombre de naissances à Nantes par année :</p>
+			<p>Nombre de naissance par année :</p>
+			<ul>
+				<li v-for="record in naissances">
+					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
+				</li>
+			</ul>
+		</div>
+
+		<div v-if="currentBranch === 'Total de fille/garçon'">
+			<p>Nombre total de naissance par fille/garçon :</p>
 			<ul>
 				<li v-for="record in naissances">
 					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
@@ -35,14 +44,15 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://unpkg.com/vue@3"></script>
 		<script>
-			const apiURL = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
+			const apiURL1 = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&facet=annee_naissance";
+			const apiURL2 = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&rows=0&sort=prenom&facet=sexe";
 			const config = {
 			};
 
 			Vue.createApp({
 				data() {
 					return {
-						branches: ["Naissance par Année", "Top prénom"],
+						branches: ["Naissance par Année", "Total de fille/garçon"],
 						currentBranch: "Naissance par Année",
 						naissances: null,
 					};
@@ -57,14 +67,29 @@
 				},
 				methods: {
 					fetchDataAsync: async function () {
-				 	try {
-					  	const response = await axios.get(apiURL, config)
-						  console.log(response.data)
-						  this.naissances = response.data.facet_groups[0].facets
-					        
-					   } catch(error) {
-					     console.log(error);
-					   }
+						const self = this
+						if(self.currentBranch === 'Naissance par Année'){
+							try {
+								const response = await axios.get(apiURL1, config)
+								console.log(response.data)
+								this.naissances = response.data.facet_groups[0].facets
+								  
+							 } catch(error) {
+							   console.log(error);
+							 }
+						}
+						else if(self.currentBranch === 'Total de fille/garçon'){
+							try {
+								const response = await axios.get(apiURL2, config)
+								console.log(response.data)
+								this.naissances = response.data.facet_groups[0].facets
+								  
+							 } catch(error) {
+							   console.log(error);
+							 }
+						}
+					
+				 	
 					 },
 				},
 			}).mount("#demo");
