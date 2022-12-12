@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prénom à Nantes</title>
+</head>
+<body>
+    <div id="demo">
+        <!-- <pre>{{naissances}}</pre> -->
+        <h1>Latest Vue.js Commits</h1>
+        <p>vuejs/vue@{{ currentBranch }}</p>
+        <ul>
+            <li v-for="record in naissances">
+                <p>{{record}}</p>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://unpkg.com/vue@3"></script>
+		<script>
+			const apiURL =
+				"https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&q=&sort=annee_naissance&facet=prenom&facet=sexe&facet=annee_naissance";
+			const config = {
+			};
+
+			Vue.createApp({
+				data() {
+					return {
+						branches: ["main"],
+						currentBranch: "main",
+						naissances: null,
+					};
+				},
+
+				created: function () {
+					this.fetchDataAsync();
+				},
+
+				watch: {
+					currentBranch: "fetchDataAsync",
+				},
+				methods: {
+					fetchDataAsync: async function () {
+				 	try {
+					  	const response = await axios.get(apiURL, config)
+						  console.log(response.data)
+						  this.naissances = response.data
+					        
+					   } catch(error) {
+					     console.log(error);
+					   }
+					 },
+					formattedMessage: function (message) {
+						const newline = message.indexOf("\n");
+						return newline > 0 ? message.slice(0, newline) : message;
+					},
+					formattedDate: function (date) {
+						return date.replace(/T|Z/g, " ");
+					},
+				},
+			}).mount("#demo");
+		</script>
+</body>
+</html>
