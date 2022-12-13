@@ -10,58 +10,60 @@
 <body>
 
 <center>
-
     <div id="demo" style="margin-right: 35%; margin-left: 35%;">
 		<h1>Naissance à Nantes</h1>
-		<template v-for="branch in branches">
+
+		<template v-for="filtre in filtres">
 			<div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" name="branch" :id="branch" :value="branch" v-model="currentBranch">
-				<label class="form-check-label" :for="branch">
-					{{ branch }}
+				<input class="form-check-input" type="radio" name="filtre" :id="filtre" :value="filtre" v-model="currentFiltre">
+				<label class="form-check-label" :for="filtre">
+					{{ filtre }}
 				</label>
 			  </div>
 		</template>
-		<div v-if="currentBranch === 'Naissance par Année'">
+
+		<div v-if="currentFiltre === 'Naissance par Année'">
 			<p>Nombre de naissance par année :</p>
 				<ul class="list-group">
-					<li v-for="record in naissances" class="list-group-item list-group-item-success shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+					<li v-for="naissance in naissances" class="list-group-item list-group-item-success shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
 					  <div class="ms-2 me-auto">
-						<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{record.name}}</div>
+						<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{naissance.name}}</div>
 					
 					  </div>
-					  <span class="badge bg-success rounded-pill fs-6">{{record.count}} Naissances</span>
+					  <span class="badge bg-success rounded-pill fs-6">{{naissance.count}} Naissances</span>
 					</li>
 				  </ul>
 		</div>
 
-		<div v-if="currentBranch === 'Total de fille/garçon'">
+		<div v-if="currentFiltre === 'Total de fille/garçon'">
 			<p>Nombre total de naissance par fille/garçon :</p>
 			<ul class="list-group ">
-				<div v-for="record in naissances">
-					<li v-if="record.name === 'GARCON'" class=" list-group-item list-group-item-info  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+				<div v-for="naissance in naissances">
+					<li v-if="naissance.name === 'GARCON'" class=" list-group-item list-group-item-info  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
 						<div class="ms-2 me-auto ">
-							<div v-if="record.name === 'GARCON'" class="fw-bold">Garçon</div>
+							<div v-if="naissance.name === 'GARCON'" class="fw-bold">Garçon</div>
 						</div>
-						<span class="badge bg-info rounded-pill">{{record.count}} Naissances</span>
+						<span class="badge bg-info rounded-pill">{{naissance.count}} Naissances</span>
 					</li>
-					<li v-if="record.name === 'FILLE'" class=" list-group-item list-group-item-danger  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+					<li v-if="naissance.name === 'FILLE'" class=" list-group-item list-group-item-danger  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
 						<div class="ms-2 me-auto ">
-							<div v-if="record.name === 'FILLE'" class="fw-bold">Fille</div>
+							<div v-if="naissance.name === 'FILLE'" class="fw-bold">Fille</div>
 						</div>
-						<span class="badge bg-danger rounded-pill">{{record.count}} Naissances</span>
+						<span class="badge bg-danger rounded-pill">{{naissance.count}} Naissances</span>
 					</li>
 				</div>
 			  </ul>
 		</div>
-		<div v-if="currentBranch === 'Naissance par Prénom'">
+
+		<div v-if="currentFiltre === 'Naissance par Prénom'">
 			<p>Nombre de naissance par prénom :</p>
 			<ul class="list-group">
-				<li v-for="record in naissances" class="list-group-item list-group-item-primary shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+				<li v-for="naissance in naissances" class="list-group-item list-group-item-primary shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
 				  <div class="ms-2 me-auto">
-					<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{record.name}}</div>
+					<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{naissance.name}}</div>
 				
 				  </div>
-				  <span class="badge bg-primary rounded-pill fs-6">{{record.count}} Naissances</span>
+				  <span class="badge bg-primary rounded-pill fs-6">{{naissance.count}} Naissances</span>
 				</li>
 			  </ul>
 		</div>
@@ -82,8 +84,8 @@
 			Vue.createApp({
 				data() {
 					return {
-						branches: ["Naissance par Année", "Total de fille/garçon", "Naissance par Prénom"],
-						currentBranch: "Naissance par Année",
+						filtres: ["Naissance par Année", "Total de fille/garçon", "Naissance par Prénom"],
+						currentFiltre: "Naissance par Année",
 						naissances: null,
 					};
 				},
@@ -93,12 +95,12 @@
 				},
 
 				watch: {
-					currentBranch: "fetchDataAsync",
+					currentFiltre: "fetchDataAsync",
 				},
 				methods: {
 					fetchDataAsync: async function () {
 						const self = this
-						if(self.currentBranch === 'Naissance par Année'){
+						if(self.currentFiltre === 'Naissance par Année'){
 							try {
 								const response = await axios.get(apiURL1, config)
 								console.log(response.data)
@@ -108,7 +110,7 @@
 							   console.log(error);
 							 }
 						}
-						else if(self.currentBranch === 'Total de fille/garçon'){
+						else if(self.currentFiltre === 'Total de fille/garçon'){
 							try {
 								const response = await axios.get(apiURL2, config)
 								console.log(response.data)
@@ -118,7 +120,7 @@
 							   console.log(error);
 							 }
 						}
-						else if(self.currentBranch === 'Naissance par Prénom'){
+						else if(self.currentFiltre === 'Naissance par Prénom'){
 							try {
 								const response = await axios.get(apiURL3, config)
 								console.log(response.data)
