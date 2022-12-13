@@ -11,48 +11,59 @@
 
 <center>
 
-    <div id="demo" style="margin-right: 35%;
-    margin-left: 35%;">
+    <div id="demo" style="margin-right: 35%; margin-left: 35%;">
 		<h1>Naissance à Nantes</h1>
 		<template v-for="branch in branches">
-			<input
-				type="radio"
-				:id="branch"
-				:value="branch"
-				name="branch"
-				v-model="currentBranch"
-			/>
-			<label :for="branch">{{ branch }}</label>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="branch" :id="branch" :value="branch" v-model="currentBranch">
+				<label class="form-check-label" :for="branch">
+					{{ branch }}
+				</label>
+			  </div>
 		</template>
 		<div v-if="currentBranch === 'Naissance par Année'">
 			<p>Nombre de naissance par année :</p>
-				<ol class="list-group">
-					<li v-for="record in naissances" class="list-group-item d-flex justify-content-between align-items-start">
+				<ul class="list-group">
+					<li v-for="record in naissances" class="list-group-item list-group-item-success shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
 					  <div class="ms-2 me-auto">
-						<div class="fw-bold">{{record.name}}</div>
+						<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{record.name}}</div>
 					
 					  </div>
-					  <span class="badge bg-success rounded-pill">{{record.count}} Naissances</span>
+					  <span class="badge bg-success rounded-pill fs-6">{{record.count}} Naissances</span>
 					</li>
-				  </ol>
-
+				  </ul>
 		</div>
 
 		<div v-if="currentBranch === 'Total de fille/garçon'">
 			<p>Nombre total de naissance par fille/garçon :</p>
-			<ul>
-				<li v-for="record in naissances">
-					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
-				</li>
-			</ul>
+			<ul class="list-group ">
+				<div v-for="record in naissances">
+					<li v-if="record.name === 'GARCON'" class=" list-group-item list-group-item-info  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+						<div class="ms-2 me-auto ">
+							<div v-if="record.name === 'GARCON'" class="fw-bold">Garçon</div>
+						</div>
+						<span class="badge bg-info rounded-pill">{{record.count}} Naissances</span>
+					</li>
+					<li v-if="record.name === 'FILLE'" class=" list-group-item list-group-item-danger  shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+						<div class="ms-2 me-auto ">
+							<div v-if="record.name === 'FILLE'" class="fw-bold">Fille</div>
+						</div>
+						<span class="badge bg-danger rounded-pill">{{record.count}} Naissances</span>
+					</li>
+				</div>
+			  </ul>
 		</div>
 		<div v-if="currentBranch === 'Naissance par Prénom'">
 			<p>Nombre de naissance par prénom :</p>
-			<ul>
-				<li v-for="record in naissances">
-					<p><strong>{{record.name}}</strong> - {{record.count}} naissances</p>
+			<ul class="list-group">
+				<li v-for="record in naissances" class="list-group-item list-group-item-primary shadow-sm p-3 mb-3  rounded d-flex justify-content-between align-items-start">
+				  <div class="ms-2 me-auto">
+					<div class=" badge bg-light rounded-pill fw-bold text-dark fs-5">{{record.name}}</div>
+				
+				  </div>
+				  <span class="badge bg-primary rounded-pill fs-6">{{record.count}} Naissances</span>
 				</li>
-			</ul>
+			  </ul>
 		</div>
     </div>
 
@@ -117,9 +128,6 @@
 							   console.log(error);
 							 }
 						}
-						
-					
-				 	
 					 },
 				},
 			}).mount("#demo");
